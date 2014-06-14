@@ -34,6 +34,23 @@ require 'spec_helper'
       it { should have_title(full_title('Contact')) }
     end
 
+    it "should have the right links on the layout" do
+    visit root_path
+    click_link "About"
+    expect(page).to have_title(full_title('About Us'))
+    click_link "Help"
+    expect(page).to have_title(full_title('Help'))
+    click_link "Contact"
+    expect(page).to have_title(full_title('Contact Us'))
+    click_link "Home"
+    visit root_path
+    click_link "Sign up now!"
+    expect(page).to have_title(full_title('Sign up'))
+    visit root_path
+    click_link "sample app"
+    expect(page).to have_title(full_title(''))
+  end
+
   end
 
 #   describe "Home page" do
