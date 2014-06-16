@@ -7,16 +7,15 @@ describe "User pages" do
   describe "signup page" do
     before { visit signup_path }
 
-    it { should have_content('Sign up') }
-    it { should have_title(full_title('Sign up')) }
+    it { should_have_title_and_content('Sign up', 'Sign up') }
+    # should_have_title_and_content is defined inside /spec/support/utilities.rb
   end
 
   describe "profile page" do
 	  let(:user) { FactoryGirl.create(:user) } 
 	  before { visit user_path(user) }
 
-	  it { should have_content(user.name) }
-	  it { should have_title(user.name) }
+	  it { should_have_title_and_content(user.name, user.name) }
   end
 
   describe "signup" do
@@ -34,17 +33,12 @@ describe "User pages" do
     describe "after submission" do
         before { click_button submit }
 
-        it { should have_title('Sign up') }
-        it { should have_content('error') }
+        it { should_have_title_and_content('Sign up', 'error') }
     end
 
     describe "with valid information" do
-      before do
-        fill_in "Name",         with: "Example User"
-        fill_in "Email",        with: "user@example.com"
-        fill_in "Password",     with: "foobar"
-        fill_in "Confirmation", with: "foobar"
-      end
+      before { valid_signup }
+      # valid_signup is a method in spec/support/utilities.rb
 
       it "should create a user" do
         expect { click_button submit }.to change(User, :count).by(1)
@@ -54,8 +48,10 @@ describe "User pages" do
         before { click_button submit }
         let(:user) { User.find_by(email: 'user@example.com') }
 
+        it { should have_link('Sign out') }
         it { should have_title(user.name) }
-        it { should have_selector('div.alert.alert-success', text: 'Welcome') }
+        it { should have_success_message('Welcome') }
+        # have_success_message is defined inside /spec/support/utilities.rb
       end
     end
   end
